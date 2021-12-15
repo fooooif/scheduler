@@ -11,7 +11,13 @@ db = client.scheduler
 # HTML 화면 보여주기
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('login.html')
+
+
+@app.route('/signin')
+def signin():
+
+    return render_template('sign.html')
 
 
 if __name__ == '__main__':
