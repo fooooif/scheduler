@@ -10,7 +10,7 @@
     <title>스케쥴러</title>
     <style>
         .box {
-            width: 400px;
+            width: 500px;
             margin: 0px auto 0 auto;
         }
 
@@ -23,6 +23,9 @@
             height: 150px;
             width: 300px;
             margin: 200px auto 0 auto;
+        }
+        .check_id{
+            color: red;
         }
     </style>
     <script>
@@ -45,19 +48,28 @@
 </figure>
 <form class="box">
     <div class="field">
+        <label class="label">이름</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="">
+        </div>
+
+    </div>
+    <div class="field">
+        <label class="label">이메일</label>
+        <div class="control">
+            <input class="input" type="email" placeholder="">
+        </div>
+
+    </div>
+    <div class="field">
         <label class="label">비밀번호</label>
         <div class="control">
             <input class="input" type="password" placeholder="********">
         </div>
+        <p class="check_id">영문과 숫자 조합의 8~20자리의 비밀번호를 설정해주세요!</p>
     </div>
     <div class="field">
         <label class="label">비밀번호 확인</label>
-        <div class="control">
-            <input class="input" type="password" placeholder="********">
-        </div>
-    </div>
-    <div class="field">
-        <label class="label">Password</label>
         <div class="control">
             <input class="input" type="password" placeholder="********">
         </div>
