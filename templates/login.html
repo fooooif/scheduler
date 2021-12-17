@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,13 +24,27 @@
            margin: 200px auto 0 auto;
         }
     </style>
+
+
+
     <script>
-        function sign() {
+        function signin(){
+            window.location.href="{{ url_for('signin') }}";
+        }
 
-            window.location.href = '/signin';
-
-            // window.location.href = "/api/signin"
-            // window.location.replace("api/signin")
+        function login() {
+        //     let email = $('#email').val();
+        //     let password = $('#password').val();
+        //
+        //      $.ajax({
+        //         type: 'POST',
+        //         url: '/api/user',
+        //         data: {},
+        //         success: function (response) {
+        //             alert(response['msg']);
+        //             window.location.reload();
+        //         }
+        //     });
         }
 
     </script>
@@ -47,21 +62,22 @@
 <form class="box">
 
   <div class="field">
-    <label class="label">이메일</label>
+    <label class="label" >이메일</label>
     <div class="control">
-      <input class="input" type="email" placeholder="">
+      <input class="input" id="email" type="text" placeholder="">
     </div>
   </div>
 
   <div class="field">
     <label class="label">비밀번호</label>
     <div class="control">
-      <input class="input" type="password" placeholder="">
+      <input class="input" id="password" type="password" placeholder="">
     </div>
   </div>
 
-  <button class="button is-primary" onclick="sign()">로그인</button>
-  <button class="button is-primary"  onclick="sign()">회원가입</button>
+  <button class="button is-primary" type="button" onclick="login()" >로그인</button>
+  <button class="button is-primary" type="button" onclick="signin()">회원가입</button>
+
 </form>
 
 

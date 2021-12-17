@@ -1,23 +1,66 @@
 from pymongo import MongoClient
-
-from flask import Flask, render_template, jsonify, request
+import jinja2
+from flask import Flask, render_template, jsonify, request,redirect, url_for
 
 app = Flask(__name__)
 
 client = MongoClient('localhost', 27017)
 db = client.scheduler
 
-
-# HTML 화면 보여주기
+## HTML 화면 보여주기
 @app.route('/')
 def home():
     return render_template('login.html')
 
-
-@app.route('/signin')
+@app.route('/signin' ,methods=['GET'])
 def signin():
 
-    return render_template('sign.html')
+    return render_template("signin.html")
+
+
+
+## api 메소드
+# user 회원가입.
+@app.route('/api/user',methods=['POST'])
+def api_signin():
+    data = request.get_json()['data']
+    print(data)
+    user = db.users.find_one({"name": data['name']})
+    if user is None:
+        doc = {
+                    "name" : data['name'],
+                    "email" : data['email'],
+                    "password" : data['password']
+        }
+        db.users.insert_one(doc)
+        return jsonify({'msg':'register'})
+    else:
+        return jsonify({'msg' :'exist'})
+
+# user name 중복체크 1.requestparam 2.pathvariable
+# /api/name?name=""
+@app.route('/api/name' ,methods=['GET'])
+def check_name():
+    name = request.args.get('name')
+    user = db.users.find_one({"name": name})
+    if user is None:
+        return jsonify({'msg':'noexist'})
+    else:
+        return jsonify({'msg':'exist'})
+
+
+# 계속해서 url변경해주는 부분 확인해보기
+@app.route('/api/login')
+def login():
+    email = request.args.get('email')
+    password = request.args.get('password')
+    user = db.users.find_one({"email": email})
+    if user is None:
+
+        return jsonify({'msg':'noexist'})
+    if user['password'] == password:
+        return redirect(url_for('signin'))
+    # url 을 바꿔야하는데
 
 
 if __name__ == '__main__':

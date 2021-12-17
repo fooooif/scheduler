@@ -28,13 +28,36 @@
             color: red;
         }
     </style>
+
     <script>
-        function signin() {
+        function click(){
+            alert("click");
+            let name = $('#name').val();
+            let email = $('#email').val();
+            let password = $('#password').val();
+            let password_check = $('#password_check').val();
 
-            window.location
 
+
+            if(password == password_check) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/user',
+                    data: {'data':{'name': name, 'email':email,'password':password}},
+                    success: function (response) {
+                        if (response['msg'] == 'register'){
+                            window.location.href = "{{ url_for('signin') }}";
+
+                        }else {
+                            window.location.href = "{{ url_for('signin') }}";
+                        }
+
+                    }
+                });
+            }else {
+                alert("비밀번호가 다릅니다.")
+            }
         }
-
     </script>
 </head>
 <body>
@@ -50,28 +73,28 @@
     <div class="field">
         <label class="label">이름</label>
         <div class="control">
-            <input class="input" type="text" placeholder="">
+            <input class="input" id="name" type="text" placeholder="">
         </div>
 
     </div>
     <div class="field">
         <label class="label">이메일</label>
         <div class="control">
-            <input class="input" type="email" placeholder="">
+            <input class="input" id="email" type="email" placeholder="">
         </div>
 
     </div>
     <div class="field">
         <label class="label">비밀번호</label>
         <div class="control">
-            <input class="input" type="password" placeholder="********">
+            <input class="input" id="password" type="password" placeholder="********">
         </div>
         <p class="check_id">영문과 숫자 조합의 8~20자리의 비밀번호를 설정해주세요!</p>
     </div>
     <div class="field">
         <label class="label">비밀번호 확인</label>
         <div class="control">
-            <input class="input" type="password" placeholder="********">
+            <input class="input" id="password-check" type="password" placeholder="********">
         </div>
     </div>
 
@@ -82,7 +105,7 @@
 <!--            <button class="btn btn-outline-secondary" type="button">회원가입</button>-->
 <!--    </div>-->
 
-    <button class="button is-primary ">회원가입</button>
+    <button class="button is-primary" type="button"  onclick="click()">회원가입</button>
 
 </form>
 
