@@ -32,19 +32,23 @@
             window.location.href="{{ url_for('signin') }}";
         }
 
-        function login() {
-        //     let email = $('#email').val();
-        //     let password = $('#password').val();
-        //
-        //      $.ajax({
-        //         type: 'POST',
-        //         url: '/api/user',
-        //         data: {},
-        //         success: function (response) {
-        //             alert(response['msg']);
-        //             window.location.reload();
-        //         }
-        //     });
+        function click_login() {
+            let email = $('#email').val();
+            let password = $('#password').val();
+
+             $.ajax({
+                type: 'POST',
+                url: '/api/login',
+                data: {'email':email,'password':password},
+                success: function (response) {
+                    if (response['msg'] == 'ok') {
+                        document.cookie = "email="+email;
+                        window.location.href = "{{ url_for('board') }}"
+                    }else {
+                        alert('등록되지 않은 회원입니다.')
+                    }
+                }
+            });
         }
 
     </script>
@@ -75,7 +79,7 @@
     </div>
   </div>
 
-  <button class="button is-primary" type="button" onclick="login()" >로그인</button>
+  <button class="button is-primary" type="button" onclick="click_login()" >로그인</button>
   <button class="button is-primary" type="button" onclick="signin()">회원가입</button>
 
 </form>

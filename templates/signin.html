@@ -30,25 +30,27 @@
     </style>
 
     <script>
-        function click(){
-            alert("click");
+        function button_click(){
             let name = $('#name').val();
             let email = $('#email').val();
             let password = $('#password').val();
-            let password_check = $('#password_check').val();
+            let password_check = $('#password-check').val();
 
-
-
+            var user_info = {"name": name, "email": email, "password": password};
             if(password == password_check) {
                 $.ajax({
-                    type: 'POST',
+                    type: 'post',
                     url: '/api/user',
-                    data: {'data':{'name': name, 'email':email,'password':password}},
+                    data: {"name":name,"email":email,"password":password},
+                    // data: user_info,
                     success: function (response) {
+                        alert(response['msg'])
                         if (response['msg'] == 'register'){
-                            window.location.href = "{{ url_for('signin') }}";
+                            //url_for 함수명으로 감!!!
+                            window.location.href = "{{ url_for('home') }}";
 
                         }else {
+
                             window.location.href = "{{ url_for('signin') }}";
                         }
 
@@ -56,6 +58,7 @@
                 });
             }else {
                 alert("비밀번호가 다릅니다.")
+                window.location.reload();
             }
         }
     </script>
@@ -105,8 +108,7 @@
 <!--            <button class="btn btn-outline-secondary" type="button">회원가입</button>-->
 <!--    </div>-->
 
-    <button class="button is-primary" type="button"  onclick="click()">회원가입</button>
-
+    <button class="button is-primary" type="button" onclick="button_click()">회원가입</button>
 </form>
 
 

@@ -14,23 +14,24 @@ def home():
 
 @app.route('/signin' ,methods=['GET'])
 def signin():
-
     return render_template("signin.html")
 
 
 
-## api 메소드
+## api 메소드 -> request.form -> 안받아짐 체크해보기
 # user 회원가입.
 @app.route('/api/user',methods=['POST'])
 def api_signin():
-    data = request.get_json()['data']
-    print(data)
-    user = db.users.find_one({"name": data['name']})
+    name = request.form['name']
+    email = request.form['email']
+    password = request.form['password']
+
+    user = db.users.find_one({"email": email})
     if user is None:
         doc = {
-                    "name" : data['name'],
-                    "email" : data['email'],
-                    "password" : data['password']
+                    "name" : name,
+                    "email" : email,
+                    "password" : password
         }
         db.users.insert_one(doc)
         return jsonify({'msg':'register'})
@@ -50,18 +51,20 @@ def check_name():
 
 
 # 계속해서 url변경해주는 부분 확인해보기
-@app.route('/api/login')
+@app.route('/api/login' ,methods=['POST'])
 def login():
-    email = request.args.get('email')
-    password = request.args.get('password')
+    email=request.form['email']
+    password=request.form['password']
     user = db.users.find_one({"email": email})
     if user is None:
 
         return jsonify({'msg':'noexist'})
     if user['password'] == password:
-        return redirect(url_for('signin'))
+        return jsonify({'msg':'ok'})
     # url 을 바꿔야하는데
 
-
+@app.route('/board',methods=['GET'])
+def board():
+    return render_template('board.html')
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
