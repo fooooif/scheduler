@@ -1,8 +1,13 @@
 from pymongo import MongoClient
 import jinja2
+import jwt
+from flask_bcrypt import Bcrypt
 from flask import Flask, render_template, jsonify, request,redirect, url_for
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
+app.config['JWT_SECRET_KEY'] = 'my_secret_key_jwt'
+algorithm = 'HS256'
 
 client = MongoClient('localhost', 27017)
 db = client.scheduler
@@ -25,7 +30,8 @@ def api_signin():
     name = request.form['name']
     email = request.form['email']
     password = request.form['password']
-
+    password = bcrypt.generate_password_hash(password)
+    print(password)
     user = db.users.find_one({"email": email})
     if user is None:
         doc = {
@@ -40,10 +46,11 @@ def api_signin():
 
 # user name 중복체크 1.requestparam 2.pathvariable
 # /api/name?name=""
-@app.route('/api/name' ,methods=['GET'])
-def check_name():
-    name = request.args.get('name')
-    user = db.users.find_one({"name": name})
+@app.route('/api/email' ,methods=['GET'])
+def check_email():
+    email = request.args.get('email')
+    print(email)
+    user = db.users.find_one({"email": email})
     if user is None:
         return jsonify({'msg':'noexist'})
     else:
@@ -55,16 +62,29 @@ def check_name():
 def login():
     email=request.form['email']
     password=request.form['password']
-    user = db.users.find_one({"email": email})
+    user = db.users.find_one({"email":email})
+
     if user is None:
 
-        return jsonify({'msg':'noexist'})
-    if user['password'] == password:
-        return jsonify({'msg':'ok'})
-    # url 을 바꿔야하는데
+        return jsonify({'msg':'noexist','access_token':None})
+
+    check = bcrypt.check_password_hash(user['password'],password)
+
+    if check:
+        json = {
+            'email':email,
+        }
+        jwt_token=jwt.encode(json,app.config['JWT_SECRET_KEY'],algorithm=algorithm)
+
+        return jsonify({'msg':'success','access_token':jwt_token})
+    else:
+        return jsonify({'msg':'fail','access_token':None})
+
 
 @app.route('/board',methods=['GET'])
 def board():
     return render_template('board.html')
+
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

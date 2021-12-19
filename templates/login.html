@@ -1,8 +1,7 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <META HTTP-EQUIV="refresh" CONTENT="15">
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
@@ -31,7 +30,6 @@
         function signin(){
             window.location.href="{{ url_for('signin') }}";
         }
-
         function click_login() {
             let email = $('#email').val();
             let password = $('#password').val();
@@ -41,11 +39,13 @@
                 url: '/api/login',
                 data: {'email':email,'password':password},
                 success: function (response) {
-                    if (response['msg'] == 'ok') {
-                        document.cookie = "email="+email;
+                    if (response['msg'] == 'success') {
+
                         window.location.href = "{{ url_for('board') }}"
+                    }else if(response['msg']== 'fail'){
+                        alert('비밀번호가 다릅니다.');
                     }else {
-                        alert('등록되지 않은 회원입니다.')
+                        alert('존재하지 않은 이메일입니다.')
                     }
                 }
             });
@@ -54,12 +54,7 @@
     </script>
 </head>
 <body>
-<!--제목 부분-->
-<form class="form-img">
 
-
-
-</form>
 <figure class="image">
   <img src="../static/image/titleimg.png">
 </figure>

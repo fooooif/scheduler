@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <title>스케쥴러</title>
+
     <style>
         .box {
             width: 500px;
@@ -24,42 +28,89 @@
             width: 300px;
             margin: 200px auto 0 auto;
         }
-        .check_id{
+
+        .check_id {
             color: red;
+        }
+
+        .check-email1 {
+            color: red;
+        }
+
+        .check-email2 {
+            color: blue;
+        }
+
+        .email-form {
+            width: 400px;
+            /*    460*/
+        }
+
+        .check-form {
+            width: 60px;
+            height: 40px;
+            margin-left: -5px
         }
     </style>
 
     <script>
-        function button_click(){
+        $(document).ready(function () {
+            $('#check-email1').hide();
+            $('#check-email2').hide();
+        });
+
+        function button_click() {
             let name = $('#name').val();
             let email = $('#email').val();
             let password = $('#password').val();
             let password_check = $('#password-check').val();
 
             var user_info = {"name": name, "email": email, "password": password};
-            if(password == password_check) {
+            if (password == password_check) {
                 $.ajax({
                     type: 'post',
                     url: '/api/user',
-                    data: {"name":name,"email":email,"password":password},
+                    data: {"name": name, "email": email, "password": password},
                     // data: user_info,
                     success: function (response) {
                         alert(response['msg'])
-                        if (response['msg'] == 'register'){
+                        if (response['msg'] == 'register') {
                             //url_for 함수명으로 감!!!
                             window.location.href = "{{ url_for('home') }}";
 
-                        }else {
+                        } else {
 
                             window.location.href = "{{ url_for('signin') }}";
                         }
 
                     }
                 });
-            }else {
+            } else {
                 alert("비밀번호가 다릅니다.")
                 window.location.reload();
             }
+        }
+
+        function email_check() {
+
+            let email = $('#email-input').val();
+            url = '/api/email?email=' + email
+            $.ajax({
+                type: 'get',
+                url: url,
+                data: {},
+                // data: user_info,
+                success: function (response) {
+
+                    if (response['msg'] == 'noexist') {
+                        $('#check-email1').hide();
+                        $('#check-email2').show();
+                    } else {
+                        $('#check-email1').show();
+                        $('#check-email2').hide();
+                    }
+                }
+            });
         }
     </script>
 </head>
@@ -77,13 +128,19 @@
         <label class="label">이름</label>
         <div class="control">
             <input class="input" id="name" type="text" placeholder="">
+
         </div>
+
 
     </div>
     <div class="field">
         <label class="label">이메일</label>
         <div class="control">
-            <input class="input" id="email" type="email" placeholder="">
+            <input class="input email-form" id="email-input" type="email" placeholder="">
+            <button class="button is-primary check-form "  type="button" onclick="email_check()">중복체크
+            </button>
+            <p id="check-email1" class="check-email1">이미 존재하는 이메일 입니다.</p>
+            <p id="check-email2" class="check-email2">사용가능한 이메일 입니다.</p>
         </div>
 
     </div>
@@ -101,12 +158,12 @@
         </div>
     </div>
 
-<!--    <div class="input-group field">-->
-<!--        <input type="input" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username"-->
-<!--               aria-describedby="basic-addon2">-->
-<!--        <div class="input-group-append">-->
-<!--            <button class="btn btn-outline-secondary" type="button">회원가입</button>-->
-<!--    </div>-->
+    <!--    <div class="input-group field">-->
+    <!--        <input type="input" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username"-->
+    <!--               aria-describedby="basic-addon2">-->
+    <!--        <div class="input-group-append">-->
+    <!--            <button class="btn btn-outline-secondary" type="button">회원가입</button>-->
+    <!--    </div>-->
 
     <button class="button is-primary" type="button" onclick="button_click()">회원가입</button>
 </form>
