@@ -32,17 +32,34 @@
                 data: {'email':email,'password':password},
                 success: function (response) {
                     if (response['msg'] == 'success') {
-
-                        window.location.href = "{{ url_for('board') }}"
-                    }else if(response['msg']== 'fail'){
+                        access_token = "Bearer " + response['access_token'];
+                        // access_token.encode('CP949')
+                        $.cookie("access_token_cookie", access_token, {path: '/'});
+                        // $.cookie("access_token_cookie", response['access_token'], {path: '/'});
+                        window.location.href='/board'
+                        // go_board(access_token);
+                    } else if (response['msg'] == 'fail') {
                         alert('비밀번호가 다릅니다.');
-                    }else {
-                        alert('존재하지 않은 이메일입니다.')
+                    } else {
+                        alert('존재하지 않은 이메일입니다.');
                     }
                 }
             });
-        }
 
+
+
+        }
+        function go_board(token){
+            $.ajax({
+                type: 'get',
+                url: '/board',
+                beforeSend: function (xhr) {
+
+            xhr.setRequestHeader("Authorization",token);
+        },
+            });
+
+        }
     </script>
 {% endblock %}
 {% block body %}

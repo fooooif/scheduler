@@ -1,11 +1,82 @@
 {% extends 'bar.html' %}
 {% block style %}
+<style>
+
+.option-location{
+    margin:0px auto 0px auto;
+    width: 800px;
+    height: 50px;
+}
+.button-size{
+    width: 390px;
+    height: 40px;
+}.button1-location {
+    background-color:#72ff71;
+     margin-left: 5px;
+     margin-right: 0px;
+    border: 0;
+ }.button2-location{
+    background-color: #ff4d43;
+    margin-left: 0px;
+    margin-right: 5px;
+    border: 0;
+   }
+  .content{
+      width: 800px;
+      height: 700px;
+      margin: 10px auto 0px auto;
+  }
+  .sort-location{
+      width: 800px;
+      height: 50px;
+  }
+
+</style>
 {% endblock %}
 
-{% block script %}
 
+{% block script %}
+<script defer src="../static/js/board.js"></script>
+<script>
+
+</script>
 {% endblock %}
 
 {% block body %}
+<body>
 
+<div class="option-location">
+        <input class="button-size button1-location" type="button" value="추가">
+        <input class="button-size button2-location" type="button" value="삭제">
+
+</div>
+
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+    정렬
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+    <li><button class="dropdown-item" type="button">시간 순</button></li>
+    <li><button class="dropdown-item" type="button">날짜 순</button></li>
+    <li><button class="dropdown-item" type="button">...</button></li>
+  </ul>
+</div>
+
+
+<div class="content">
+    <table>
+        <tr>
+            <td></td>
+        </tr>
+        <tr style="width: 50px">
+            <td>첫번째 내용</td>
+        </tr>
+        <tr>
+            <td>두번 내용</td>
+        </tr>
+    </table>
+
+</div>
+</div>
+</body>
 {% endblock %}

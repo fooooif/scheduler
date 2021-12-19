@@ -1,13 +1,19 @@
+import datetime
+
 from pymongo import MongoClient
 import jinja2
-import jwt
+from flask_jwt_extended import *
 from flask_bcrypt import Bcrypt
 from flask import Flask, render_template, jsonify, request,redirect, url_for
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-app.config['JWT_SECRET_KEY'] = 'my_secret_key_jwt'
-algorithm = 'HS256'
+app.config.update(
+    DEBUG = True,
+    JWT_SECRET_KEY="my_secret_key_jwt",
+    JWT_TOKEN_LOCATION='cookies'
+)
+jwt = JWTManager(app)
 
 client = MongoClient('localhost', 27017)
 db = client.scheduler
@@ -74,15 +80,16 @@ def login():
         json = {
             'email':email,
         }
-        jwt_token=jwt.encode(json,app.config['JWT_SECRET_KEY'],algorithm=algorithm)
-
-        return jsonify({'msg':'success','access_token':jwt_token})
+        access_token = create_access_token(identity=json,expires_delta=datetime.timedelta(minutes=15))
+        return jsonify({'msg':'success','access_token':access_token})
     else:
         return jsonify({'msg':'fail','access_token':None})
 
 
 @app.route('/board',methods=['GET'])
+@jwt_required()
 def board():
+    print(request.headers)
     return render_template('board.html')
 
 

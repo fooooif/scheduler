@@ -28,7 +28,9 @@
         .check-email2 {
             color: blue;
         }
-
+         .check-email3 {
+            color: red;
+        }
         .email-form {
             width: 400px;
             /*    460*/
@@ -46,6 +48,7 @@
         $(document).ready(function () {
             $('#check-email1').hide();
             $('#check-email2').hide();
+            $('#check-email3').hide();
         });
 
         function button_click() {
@@ -83,6 +86,12 @@
         function email_check() {
 
             let email = $('#email-input').val();
+            if(email.split("@").length == 1 || email.split(".").length ==1) {
+                $('#check-email2').hide();
+                $('#check-email1').hide();
+                $('#check-email3').show();
+                return;
+            }
             url = '/api/email?email=' + email
             $.ajax({
                 type: 'get',
@@ -94,9 +103,11 @@
                     if (response['msg'] == 'noexist') {
                         $('#check-email1').hide();
                         $('#check-email2').show();
+                        $('#check-email3').hide();
                     } else {
                         $('#check-email1').show();
                         $('#check-email2').hide();
+                        $('#check-email3').hide();
                     }
                 }
             });
@@ -123,6 +134,7 @@
             </button>
             <p id="check-email1" class="check-email1">이미 존재하는 이메일 입니다.</p>
             <p id="check-email2" class="check-email2">사용가능한 이메일 입니다.</p>
+            <p id="check-email3" class="check-email3">이메일 형식으로 입력해주세요.</p>
         </div>
 
     </div>
