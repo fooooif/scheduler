@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+    <title>scheduler</title>
+    <style>
+        .box{
+            width: 400px ;
+            margin: 0px auto 0 auto;
+        }
+        .button.is-primary{
+            /*color: #4dfff3;*/
+            background-color: #4dfff3;
+        }
+        .image{
+            height: 150px;
+            width: 300px;
+           margin: 100px auto 0 auto;
+        }
+    </style>
+
+
+
+    <script>
+        function signin(){
+            // window.location.href="{{ url_for('signin') }}";
+            window.location.href="/signin";
+        }
+        function click_login() {
+            let email = $('#email').val();
+            let password = $('#password').val();
+
+             $.ajax({
+                type: 'POST',
+                url: '/api/login',
+                data: {'email':email,'password':password},
+                success: function (response) {
+                    if (response['msg'] == 'success') {
+
+                        window.location.href = "{{ url_for('board') }}"
+                    }else if(response['msg']== 'fail'){
+                        alert('비밀번호가 다릅니다.');
+                    }else {
+                        alert('존재하지 않은 이메일입니다.')
+                    }
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+
+<figure class="image">
+  <img src="../../static/image/titleimg.png">
+</figure>
+<form class="box">
+
+  <div class="field">
+    <label class="label" >이메일</label>
+    <div class="control">
+      <input class="input" id="email" type="text" placeholder="">
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">비밀번호</label>
+    <div class="control">
+      <input class="input" id="password" type="password" placeholder="">
+    </div>
+  </div>
+
+  <button class="button is-primary" type="button" onclick="click_login()" >로그인</button>
+  <button class="button is-primary" type="button" onclick="signin()">회원가입</button>
+
+</form>
+
+
+
+</body>
+</html>

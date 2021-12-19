@@ -1,14 +1,6 @@
-
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-
-    <title>스케쥴러</title>
-    <style>
+{% extends 'bar.html' %}
+{% block style %}
+      <style>
         .box{
             width: 400px ;
             margin: 0px auto 0 auto;
@@ -20,15 +12,15 @@
         .image{
             height: 150px;
             width: 300px;
-           margin: 200px auto 0 auto;
+           margin: 100px auto 0 auto;
         }
-    </style>
-
-
-
+      </style>
+    {% endblock %}
+{% block script %}
     <script>
         function signin(){
-            window.location.href="{{ url_for('signin') }}";
+            // window.location.href="{{ url_for('signin') }}";
+            window.location.href="/signin";
         }
         function click_login() {
             let email = $('#email').val();
@@ -52,12 +44,9 @@
         }
 
     </script>
-</head>
+{% endblock %}
+{% block body %}
 <body>
-
-<figure class="image">
-  <img src="../static/image/titleimg.png">
-</figure>
 <form class="box">
 
   <div class="field">
@@ -78,8 +67,8 @@
   <button class="button is-primary" type="button" onclick="signin()">회원가입</button>
 
 </form>
-
-
-
 </body>
-</html>
+{% endblock %}
+
+
+

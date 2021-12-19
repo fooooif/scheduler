@@ -15,11 +15,11 @@ db = client.scheduler
 ## HTML 화면 보여주기
 @app.route('/')
 def home():
-    return render_template('login.html')
+    return render_template('login2.html')
 
 @app.route('/signin' ,methods=['GET'])
 def signin():
-    return render_template("signin.html")
+    return render_template("signin2.html")
 
 
 

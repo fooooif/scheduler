@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Webpage Title -->
+    <title>scheduler</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <title>스케쥴러</title>
+    <meta charset="UTF-8">
+  {% block head %}{% endblock %}
+  <style>
+    .image{
+            height: 150px;
+            width: 300px;
+           margin: 100px auto 0 auto;
+        }
+    .logout{
+      height: 20px;
+      width: 20px;
+    }
+
+  </style>
+  {% block style %}{% endblock %}
+
+  {% block script %}{% endblock %}
+</head>
+<body>
+
+<figure class="image">
+  <a href="/">
+  <img src="../static/image/titleimg.png">
+    </a>
+<!--  <button type="button" class="logout" id=""><img src="../static/image/logout.jpeg"></button>-->
+</figure>
+
+</body>
+{% block body %}{% endblock %}
+</html>
