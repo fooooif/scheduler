@@ -1,10 +1,246 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
+{% extends 'bar.html' %}
+{% block style %}
+<style>
+
+    .option-location {
+        margin: 0px auto 0px auto;
+        width: 800px;
+        height: 70px;
+    }
+
+    .logout-button {
+        width: 800px;
+        height: 50px;
+
+    }
+
+    .button-size1 {
+        width: 40px;
+        height: 40px;
+        float: right;
+        padding-right: 0px;
+        padding-left: 0px;
+        padding-bottom: 0px;
+        padding-top: 0px;
+    }
+
+    .image-size {
+        width: 35px;
+        height: 35px;
+    }
+
+    .user-name {
+        float: right;
+        margin-right: 10px;
+        margin-top: 5px;
+    }
+
+    .box {
+        margin-left: auto;
+        margin-right: auto;
+        width: 800px;
+        height: 500px;
+    }
+
+    .form-check {
+        width: 50px;
+        float: left;
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+
+    .field-day {
+        height: 70px;
+        margin-bottom: 5px;
+    }
+
+    .field-content {
+        height: 300px;
+    }
+
+    .input-content {
+        height: 250px;
+    }
+    .time-check{
+        width: 380px;
+        height: 35px;
+        float: right;
+        margin-top: -5px;
+    }
+    .two-button{
+        margin: 0px auto 0px auto;
+        width: 800px;
+        height: 50px;
+    }
+     .button1-location {
+        background-color:#4dfff3;
+        /*margin-left: 5px;*/
+        /*margin-right: 0px;*/
+        float: left;
+        border: 0;
+    }
+     .button2-location {
+        background-color: #ff665f;
+        /*margin-left: 0px;*/
+        /*margin-right: 5px;*/
+        float: right;
+        border: 0;
+    }
+      .button-size {
+        width: 398px;
+        height: 40px;
+    }
+
+    .plus-minus-button {
+        width: 800px;
+        height: 50px;
+    }
+</style>
+{% endblock %}
+{% block script %}
+<script>
+    function logout_click(){
+        $.removeCookie('access_token_cookie');
+        alert('로그아웃 되었습니다!');
+        window.location.href = '/'
+    }
+    function back_page(){
+        window.location.href='/board'
+    }
+    function register(){
+        let arr = []
+        if ($('#num1').is(':checked')) {
+            arr.push(1)
+        }
+        if ($('#num2').is(':checked')) {
+            arr.push(2)
+        }
+        if ($('#num3').is(':checked')) {
+            arr.push(3)
+        }
+        if ($('#num4').is(':checked')) {
+            arr.push(4)
+        }
+        if ($('#num5').is(':checked')) {
+            arr.push(5)
+        }
+        if ($('#num6').is(':checked')) {
+            arr.push(6)
+        }
+        let title = $('#title').val();
+        let content = $('#content').val();
+        let time = $('#time').val();
+
+        let json = {'data':[{
+            'day':arr,
+                'title':title,
+                'content':content,
+                'time':time
+            }]}
+        $.ajax({
+                type: 'POST',
+                url: '/api/board',
+                dataType:'json',
+                contentType: "application/json; charset:UTF-8",
+                data: json,
+                success: function (response) {
+                    window.location.href = '/board'
+                }
+            });
+    }
+</script>
+{% endblock %}
+
+{% block body %}
 <body>
-$END$
+<div class="option-location">
+
+    <div class="logout-button">
+
+        <button type="button" class="button-size1" onclick="logout_click()"><img class="image-size"
+                                                                                 src="../static/image/logout.jpeg">
+        </button>
+        {% if name|length %}
+        <b class="user-name">{{name}}님 안녕하세요!</b>
+        {% endif %}
+    </div>
+</div>
+
+<form class="box">
+
+    <div class="field field-day">
+        <label class="label">요일 & 시간</label>
+        <div class="day-check">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="num1">
+                <label class="form-check-label" for="num1">
+                    월
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="num2">
+                <label class="form-check-label" for="num2">
+                    화
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="num3">
+                <label class="form-check-label" for="num3">
+                    수
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="num4">
+                <label class="form-check-label" for="num4">
+                    목
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="num5">
+                <label class="form-check-label" for="num5">
+                    금
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="num6">
+                <label class="form-check-label" for="num6">
+                    토
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="num7">
+                <label class="form-check-label" for="num7">
+                    일
+                </label>
+            </div>
+        </div>
+        <div class="time-check">
+            <div class="control">
+                <input class="input " id="time" type="text" placeholder="">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="field">
+        <label class="label">제목</label>
+        <div class="control">
+            <input class="input" id="title" type="text" placeholder="">
+        </div>
+    </div>
+    <div class="field-content">
+        <label class="label">내용</label>
+        <div class="control">
+            <input class="input input-content" id="content" type="text" placeholder="">
+        </div>
+    </div>
+
+</form>
+<div class="two-button">
+        <input class="button-size button1-location" type="button" value="등록하기" onclick="register()">
+        <input class="button-size button2-location" type="button" value="되돌아가기" onclick="back_page()">
+    </div>
+
 </body>
-</html>
+
+{% endblock %}
