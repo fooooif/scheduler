@@ -1,7 +1,6 @@
 import datetime
 
 from pymongo import MongoClient
-import jinja2
 from flask_jwt_extended import *
 from flask_bcrypt import Bcrypt
 from flask import Flask, render_template, jsonify, request,redirect, url_for
@@ -11,13 +10,16 @@ bcrypt = Bcrypt(app)
 app.config.update(
     DEBUG = True,
     JWT_SECRET_KEY="my_secret_key_jwt",
-    JWT_TOKEN_LOCATION='cookies'
+    JWT_TOKEN_LOCATION='cookies',
+    # get post 뺴고 막아놈
+    JWT_CSRF_METHODS=["PUT", "PATCH", "DELETE"]
 )
 jwt = JWTManager(app)
 
 client = MongoClient('localhost', 27017)
 db = client.scheduler
 
+day = {1:"월",2:"화",3:"수",4:"목",5:"금",6:"토",7:"일"}
 ## HTML 화면 보여주기
 @app.route('/')
 def home():
@@ -27,7 +29,21 @@ def home():
 def signin():
     return render_template("signin2.html")
 
+@app.route('/write',methods=['GET'])
+@jwt_required()
+def write_board():
+    jwt_token = get_jwt_identity()
+    email = jwt_token['email']
+    name = db.users.find_one({'email': email})['name']
+    return render_template('write.html',name=name)
 
+@app.route('/board',methods=['GET'])
+@jwt_required()
+def board():
+    jwt_token=get_jwt_identity()
+    email = jwt_token['email']
+    name = db.users.find_one({'email':email})['name']
+    return render_template('board.html',name = name)
 
 ## api 메소드 -> request.form -> 안받아짐 체크해보기
 # user 회원가입.
@@ -37,7 +53,6 @@ def api_signin():
     email = request.form['email']
     password = request.form['password']
     password = bcrypt.generate_password_hash(password)
-    print(password)
     user = db.users.find_one({"email": email})
     if user is None:
         doc = {
@@ -55,7 +70,6 @@ def api_signin():
 @app.route('/api/email' ,methods=['GET'])
 def check_email():
     email = request.args.get('email')
-    print(email)
     user = db.users.find_one({"email": email})
     if user is None:
         return jsonify({'msg':'noexist'})
@@ -64,7 +78,7 @@ def check_email():
 
 
 # 계속해서 url변경해주는 부분 확인해보기
-@app.route('/api/login' ,methods=['POST'])
+@app.route('/api/login',methods=['POST'])
 def login():
     email=request.form['email']
     password=request.form['password']
@@ -86,11 +100,16 @@ def login():
         return jsonify({'msg':'fail','access_token':None})
 
 
-@app.route('/board',methods=['GET'])
+@app.route('/api/board',methods=['POST'])
 @jwt_required()
-def board():
-    print(request.headers)
-    return render_template('board.html')
+def register_board():
+    jwt_token = get_jwt_identity()
+    email = jwt_token['email']
+    name = db.users.find_one({'email': email})['name']
+    print(request.is_json)
+    print(request.data)
+    return jsonify({'msg':'succes'})
+
 
 
 if __name__ == '__main__':
