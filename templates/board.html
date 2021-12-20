@@ -2,35 +2,78 @@
 {% block style %}
 <style>
 
-.option-location{
-    margin:0px auto 0px auto;
-    width: 800px;
-    height: 50px;
-}
-.button-size{
-    width: 390px;
-    height: 40px;
-}.button1-location {
-    background-color:#72ff71;
-     margin-left: 5px;
-     margin-right: 0px;
-    border: 0;
- }.button2-location{
-    background-color: #ff4d43;
-    margin-left: 0px;
-    margin-right: 5px;
-    border: 0;
-   }
-  .content{
-      width: 800px;
-      height: 700px;
-      margin: 10px auto 0px auto;
-  }
-  .sort-location{
-      width: 800px;
-      height: 50px;
-  }
+    .option-location {
+        margin: 0px auto 0px auto;
+        width: 800px;
+        height: 150px;
+    }
 
+    .button-size {
+        width: 398px;
+        height: 40px;
+    }
+
+    .plus-minus-button {
+        width: 800px;
+        height: 50px;
+    }
+
+    .button1-location {
+        background-color: #4dfff3;
+        /*margin-left: 5px;*/
+        /*margin-right: 0px;*/
+        float: left;
+        border: 0;
+    }
+
+    .button2-location {
+        background-color: #ff665f;
+        /*margin-left: 0px;*/
+        /*margin-right: 5px;*/
+        float: right;
+        border: 0;
+    }
+
+    .content {
+        width: 800px;
+        height: 700px;
+        margin: 10px auto 0px auto;
+    }
+
+    .sort-location {
+        width: 800px;
+        height: 50px;
+    }
+
+    .logout-button {
+        width: 800px;
+        height: 50px;
+
+    }
+
+    .button-size1 {
+        width: 40px;
+        height: 40px;
+        float: right;
+        padding-right: 0px;
+        padding-left: 0px;
+        padding-bottom: 0px;
+        padding-top: 0px;
+    }
+
+    .image-size {
+        width: 35px;
+        height: 35px;
+    }
+
+    .dropdown {
+        float: right;
+    }
+    .user-name{
+        float: right;
+        margin-right: 10px;
+        margin-top: 5px;
+    }
 </style>
 {% endblock %}
 
@@ -38,7 +81,14 @@
 {% block script %}
 <script defer src="../static/js/board.js"></script>
 <script>
-
+    function logout_click() {
+        $.removeCookie('access_token_cookie');
+        alert('로그아웃 되었습니다!');
+        window.location.href = '/'
+    }
+    function pluscilck(){
+        window.location.href ='/write'
+    }
 </script>
 {% endblock %}
 
@@ -46,37 +96,50 @@
 <body>
 
 <div class="option-location">
-        <input class="button-size button1-location" type="button" value="추가">
+
+    <div class="logout-button">
+
+        <button type="button" class="button-size1" onclick="logout_click()"><img class="image-size"
+                                                                                 src="../static/image/logout.jpeg">
+        </button>
+        {% if name|length %}
+        <b class="user-name">{{name}}님 안녕하세요!</b>
+    {% endif %}
+    </div>
+    <div class="plus-minus-button">
+        <input class="button-size button1-location" type="button" value="추가" onclick="pluscilck()">
         <input class="button-size button2-location" type="button" value="삭제">
+    </div>
+
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown"
+                aria-expanded="false">
+            정렬
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <li>
+                <button class="dropdown-item" type="button">시간 순</button>
+            </li>
+            <li>
+                <button class="dropdown-item" type="button">날짜 순</button>
+            </li>
+            <li>
+                <button class="dropdown-item" type="button">Something else here</button>
+            </li>
+        </ul>
+    </div>
 
 </div>
 
-<div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-    정렬
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-    <li><button class="dropdown-item" type="button">시간 순</button></li>
-    <li><button class="dropdown-item" type="button">날짜 순</button></li>
-    <li><button class="dropdown-item" type="button">...</button></li>
-  </ul>
-</div>
 
-
+{% if board_list|length %}
 <div class="content">
-    <table>
-        <tr>
-            <td></td>
-        </tr>
-        <tr style="width: 50px">
-            <td>첫번째 내용</td>
-        </tr>
-        <tr>
-            <td>두번 내용</td>
-        </tr>
-    </table>
 
 </div>
+{% else %}
+
+{% endif %}
+
 </div>
 </body>
 {% endblock %}
