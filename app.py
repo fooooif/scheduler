@@ -18,7 +18,8 @@ jwt = JWTManager(app)
 client = MongoClient('localhost', 27017)
 db = client.scheduler
 
-day = {1:"월",2:"화",3:"수",4:"목",5:"금",6:"토",7:"일"}
+day = {1:"월",2:"화",3:"수",4:"목",5:"금",6:"토",7:"일",8:"매주"}
+board_sort_type = {1:"NORMAL",2:"TIME",3:"UNIQUE"}
 ## HTML 화면 보여주기
 @app.route('/')
 def home():
@@ -37,6 +38,18 @@ def write_board():
     name = db.users.find_one({'email': email})['name']
     return render_template('write.html',name=name)
 
+@app.route('/board/<sortTd>',methods=['GET'])
+@jwt_required()
+def board_sort(sortTd):
+    jwt_token=get_jwt_identity()
+    email = jwt_token['email']
+    name = db.users.find_one({'email':email})['name']
+    boards = list(db.boards.find({'email': email}))
+    for board in boards:
+        board['_id']=str(board['_id'])
+
+    return render_template('board.html',name = name,board_list=boards)
+
 @app.route('/board',methods=['GET'])
 @jwt_required()
 def board():
@@ -48,7 +61,6 @@ def board():
         board['_id']=str(board['_id'])
 
     return render_template('board.html',name = name,board_list=boards)
-
 ## api 메소드 -> request.form -> 안받아짐 체크해보기
 # user 회원가입.
 @app.route('/api/user',methods=['POST'])
@@ -143,6 +155,17 @@ def delete_board():
 #     boards = list(db.boards.find({'email': email}, {'_id': False}))
 #
 #     return jsonify({'data':boards})
+def sort(sortId,board_list):
+    id = board_sort_type[sortId]
+
+    if id == "NORMAL":
+        return board_list
+    elif  id == "TIME":
+        return sorted(board_list, key=lambda x: x['time'])
+    else:
+        return sorted(board_list, key=lambda x: x['day'])
+
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
