@@ -62,10 +62,10 @@
         height: 250px;
     }
     .time-check{
-        width: 380px;
+        width: 100px;
         height: 35px;
-        float: right;
-        margin-top: -5px;
+        float: left;
+        margin-top: -6px;
     }
     .two-button{
         margin: 0px auto 0px auto;
@@ -91,9 +91,8 @@
         height: 40px;
     }
 
-    .plus-minus-button {
-        width: 800px;
-        height: 50px;
+    .time-input-size{
+        height: 35px;
     }
 </style>
 {% endblock %}
@@ -131,22 +130,26 @@
         let content = $('#content').val();
         let time = $('#time').val();
 
-        let json = {'data':[{
+        let json = {'data':{
             'day':arr,
                 'title':title,
                 'content':content,
                 'time':time
-            }]}
+            }}
         $.ajax({
                 type: 'POST',
                 url: '/api/board',
                 dataType:'json',
                 contentType: "application/json; charset:UTF-8",
-                data: json,
+                data: JSON.stringify(json),
                 success: function (response) {
+                    alert('등록되었습니다.')
                     window.location.href = '/board'
                 }
             });
+    }
+    function imgcilck(){
+        window.location.href='/board'
     }
 </script>
 {% endblock %}
@@ -216,7 +219,7 @@
         </div>
         <div class="time-check">
             <div class="control">
-                <input class="input " id="time" type="text" placeholder="">
+                <input class="input time-input-size" id="time" type="text" placeholder="hh:mm">
             </div>
         </div>
     </div>

@@ -17,7 +17,11 @@
         width: 800px;
         height: 50px;
     }
-
+    .back-ok-button {
+        display: none;
+        width: 800px;
+        height: 50px;
+    }
     .button1-location {
         background-color: #4dfff3;
         /*margin-left: 5px;*/
@@ -32,17 +36,6 @@
         /*margin-right: 5px;*/
         float: right;
         border: 0;
-    }
-
-    .content {
-        width: 800px;
-        height: 700px;
-        margin: 10px auto 0px auto;
-    }
-
-    .sort-location {
-        width: 800px;
-        height: 50px;
     }
 
     .logout-button {
@@ -66,13 +59,77 @@
         height: 35px;
     }
 
-    .dropdown {
-        float: right;
+    /*.dropdown {*/
+    /*    float: right;*/
+    /*}*/
+    .option-bottom {
+        display: flex;
+        flex-direction: row-reverse;
     }
-    .user-name{
+
+    .user-name {
         float: right;
         margin-right: 10px;
         margin-top: 5px;
+    }
+
+    .board-location {
+        display: flex;
+        flex-direction: row;
+
+
+    }
+
+    .box {
+        margin: 0px auto 0px auto;
+        width: 800px;
+        height: 150px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .no-image {
+        width: 300px;
+        heigth: 300px;
+        margin: 0px auto 0px auto;
+
+    }
+
+
+    .nofile-img-location {
+        width: 800px;
+        width: 2px;
+        margin: 0px auto 0px auto;
+    }
+
+    .day-location {
+        flex-direction: row;
+        display: flex;
+
+    }
+
+    .last-location {
+        width: 300px;
+    }
+
+    .sort-button {
+        background-color: rgba(22, 32, 68, 0.25);
+        text-decoration-color: black;
+        margin-left: 5px;
+    }
+
+    .select-button {
+        width: 50px;
+        margin: auto 0px auto 0px;
+        flex-direction: row;
+        align-content: center;
+    }
+    .form-check-input{
+        display: none;
+    }
+    .board-content {
+        display: flex;
+        flex-direction: column;
     }
 </style>
 {% endblock %}
@@ -81,13 +138,65 @@
 {% block script %}
 <script defer src="../static/js/board.js"></script>
 <script>
+    $('#')
+
+    function imgcilck() {
+        window.location.href = '/board'
+    }
+
     function logout_click() {
         $.removeCookie('access_token_cookie');
         alert('로그아웃 되었습니다!');
         window.location.href = '/'
     }
-    function pluscilck(){
-        window.location.href ='/write'
+
+    function plusclick() {
+        window.location.href = '/write'
+    }
+
+    function deleteclick() {
+
+        for (let i = 0; i < "{{board_list|length}}"; i++) {
+            $('#select-button' + i).show()
+        }
+        $
+        $('#plus-minus-button').hide()
+        $('#option-bottom').hide()
+        $('#back-ok-button').show()
+
+    }
+
+    function backclick() {
+
+        $('#plus-minus-button').show()
+        $('#option-bottom').show()
+        $('#back-ok-button').hide()
+    }
+
+
+     function okclick() {
+
+
+        let board_list_id = []
+        for (let i = 0; i < "{{board_list|length}}"; i++) {
+            if ($('#select-button' + i).is(':checked')){
+                let id = $('#select-button' + i).val();
+                board_list_id.push(id);
+            }
+
+        }
+        let json = {'id':board_list_id}
+        $.ajax({
+            type: 'POST',
+            url: '/api/board/drop',
+            dataType:'json',
+            contentType: "application/json; charset:UTF-8",
+            data: JSON.stringify(json),
+            success: function (response) {
+
+            }
+        });
+        window.location.href = '/board'
     }
 </script>
 {% endblock %}
@@ -104,41 +213,57 @@
         </button>
         {% if name|length %}
         <b class="user-name">{{name}}님 안녕하세요!</b>
-    {% endif %}
+        {% endif %}
     </div>
-    <div class="plus-minus-button">
-        <input class="button-size button1-location" type="button" value="추가" onclick="pluscilck()">
-        <input class="button-size button2-location" type="button" value="삭제">
+    <div class="plus-minus-button" id="plus-minus-button">
+        <input class="button-size button1-location" type="button" value="추가" onclick="plusclick()">
+        <input class="button-size button2-location" type="button" value="삭제" onclick="deleteclick()">
     </div>
-
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown"
-                aria-expanded="false">
-            정렬
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <li>
-                <button class="dropdown-item" type="button">시간 순</button>
-            </li>
-            <li>
-                <button class="dropdown-item" type="button">날짜 순</button>
-            </li>
-            <li>
-                <button class="dropdown-item" type="button">Something else here</button>
-            </li>
-        </ul>
+    <div class="back-ok-button" id="back-ok-button">
+        <input class="button-size button1-location" type="button" value="되돌아가기" onclick="backclick()">
+        <input class="button-size button2-location" type="button" value="확인" onclick="okclick()">
+    </div>
+    <div class="option-bottom" id="option-bottom">
+        <div>
+            <input class="button is-active is-light sort-button " type="button" value="정렬하기" onclick="">
+        </div>
     </div>
 
 </div>
 
 
 {% if board_list|length %}
-<div class="content">
+{% for i in range(1,board_list|length+1) %}
 
+<div class="box">
+    <div class="board-location">
+        <div class="select-button">
+            <input id="select-button{{i-1}}" class="form-check-input" type="checkbox" value={{board_list[i-1]['_id']}}>
+        </div>
+        <div class="board-content">
+            <div class="day-location">
+                {% for day in board_list[i-1]['day'] %}
+                <b>{{day}}</b>
+                {% endfor %}
+            </div>
+
+            <h2>{{board_list[i-1]['title']}}</h2>
+            <b>{{board_list[i-1]['time']}}</b>
+            <div class="content">
+                <p>{{board_list[i-1]['content']}}</p>
+            </div>
+        </div>
+    </div>
 </div>
+{% endfor %}
+
 {% else %}
+<div class="nofile-img-location">
+    <img class="no-image" src="../static/image/x.png">
+</div>
 
 {% endif %}
+<div class="last-location">
 
 </div>
 </body>

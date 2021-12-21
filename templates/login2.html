@@ -18,6 +18,8 @@
     {% endblock %}
 {% block script %}
     <script>
+
+
         function signin(){
             // window.location.href="{{ url_for('signin') }}";
             window.location.href="/signin";
@@ -32,10 +34,11 @@
                 data: {'email':email,'password':password},
                 success: function (response) {
                     if (response['msg'] == 'success') {
-                        access_token = "Bearer " + response['access_token'];
+                        // access_token = "Bearer " + response['access_token'];
                         // access_token.encode('CP949')
-                        $.cookie("access_token_cookie", access_token, {path: '/'});
-                        // $.cookie("access_token_cookie", response['access_token'], {path: '/'});
+                        // $.cookie("access_token_cookie", access_token, {path: '/'});
+                        $.removeCookie('access_token_cookie');
+                        $.cookie("access_token_cookie", response['access_token']);
                         window.location.href='/board'
                         // go_board(access_token);
                     } else if (response['msg'] == 'fail') {

@@ -45,6 +45,7 @@
 {% endblock %}
 {% block script %}
     <script>
+        let check_email = false;
         $(document).ready(function () {
             $('#check-email1').hide();
             $('#check-email2').hide();
@@ -53,33 +54,35 @@
 
         function button_click() {
             let name = $('#name').val();
-            let email = $('#email').val();
+            let email = $('#email-input').val();
             let password = $('#password').val();
             let password_check = $('#password-check').val();
 
-            var user_info = {"name": name, "email": email, "password": password};
-            if (password == password_check) {
+            if (password == password_check && check_email == true) {
                 $.ajax({
                     type: 'post',
                     url: '/api/user',
                     data: {"name": name, "email": email, "password": password},
                     // data: user_info,
                     success: function (response) {
-                        alert(response['msg'])
+
                         if (response['msg'] == 'register') {
                             //url_for 함수명으로 감!!!
+                            alert('회원가입 성공.')
                             window.location.href = "{{ url_for('home') }}";
 
                         } else {
-
+                            alert('회원가입 실패.')
                             window.location.href = "{{ url_for('signin') }}";
                         }
 
                     }
                 });
-            } else {
+            }else if(check_email == false){
+                alert("이메일 중복체크 해주세요.")
+            }
+            else {
                 alert("비밀번호가 다릅니다.")
-                window.location.reload();
             }
         }
 
@@ -104,6 +107,7 @@
                         $('#check-email1').hide();
                         $('#check-email2').show();
                         $('#check-email3').hide();
+                        check_email = true
                     } else {
                         $('#check-email1').show();
                         $('#check-email2').hide();
