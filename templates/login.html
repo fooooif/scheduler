@@ -39,7 +39,7 @@
                         // $.cookie("access_token_cookie", access_token, {path: '/'});
                         $.removeCookie('access_token_cookie');
                         $.cookie("access_token_cookie", response['access_token']);
-                        window.location.href='/board'
+                        window.location.href='/board/1'
                         // go_board(access_token);
                     } else if (response['msg'] == 'fail') {
                         alert('비밀번호가 다릅니다.');
@@ -52,17 +52,7 @@
 
 
         }
-        function go_board(token){
-            $.ajax({
-                type: 'get',
-                url: '/board',
-                beforeSend: function (xhr) {
 
-            xhr.setRequestHeader("Authorization",token);
-        },
-            });
-
-        }
     </script>
 {% endblock %}
 {% block body %}
